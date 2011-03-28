@@ -1,0 +1,18 @@
+<html>
+<script type="text/javascript">
+function exec_targets(pinned) {
+  if(pinned) 
+    chrome.tabs.executeScript(null, {file: "scripts/inject_targets.js"});  
+  else
+    chrome.tabs.executeScript(null, {file: "scripts/remove_targets.js"});  
+}
+
+chrome.tabs.onUpdated.addListener(function(id,info,tab) {
+  exec_targets(tab.pinned);
+});
+chrome.tabs.onCreated.addListener(function(tab) {
+  if(pinned) 
+    chrome.tabs.executeScript(null, {file: "scripts/inject_targets.js"});  
+});
+</script>
+</html>
