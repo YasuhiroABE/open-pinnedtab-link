@@ -2,13 +2,22 @@
 <head>
 <script type="text/javascript" src="scripts/init.js"></script>
 <script type="text/javascript">
+
 chrome.tabs.onUpdated.addListener(function(id,info,tab) {
-  if(tab.pinned) { 
-    localStorage[tab.id] = true;
-    chrome.tabs.executeScript(null, {file: "scripts/inject_targets.js"});  
+  var params = localStorage.getItem(tab.id);
+  if(tab.pinned) {
+    if (params == undefined) {
+      params = {
+        enabled:true,
+        external_link_only:false
+      };
+      localStorage[tab.id] = params;
+    }
+    if (params.enabled == true) {
+      chrome.tabs.executeScript(null, {file: "scripts/inject_targets.js"});
+    }
   } else {
-    var tabstate = localStorage.getItem(tab.id);
-    if(tabstate != undefined) { 
+    if(params != undefined) {
       localStorage.removeItem(tab.id);
       chrome.tabs.executeScript(null, {file: "scripts/remove_targets.js"});
     }
@@ -17,25 +26,29 @@ chrome.tabs.onUpdated.addListener(function(id,info,tab) {
 
 chrome.tabs.onCreated.addListener(function(tab) {
   if(tab.pinned) {
-    chrome.tabs.executeScript(null, {file: "scripts/inject_targets.js"});
+    var params = localStorage.getItem(tab.id);
+    if(params != undefined && params.enabled == true) {
+      chrome.tabs.executeScript(null, {file: "scripts/inject_targets.js"});
+    }
   }
 });
 
 chrome.tabs.onRemoved.addListener(function(id,info) {
-  var tabstate = localStorage.getItem(id);
-  if(tabstate != undefined) { 
+  var params = localStorage.getItem(id);
+  if(params != undefined) {
     localStorage.removeItem(id);
     chrome.tabs.executeScript(null, {file: "scripts/remove_targets.js"});
   }
 });
 
 chrome.tabs.onDetached.addListener(function(id,info) {
-  var tabstate = localStorage.getItem(id);
-  if(tabstate != undefined) { 
+  var params = localStorage.getItem(id);
+  if(params != undefined) {
     localStorage.removeItem(id);
     chrome.tabs.executeScript(null, {file: "scripts/remove_targets.js"});
   }
 });
+
 </script>
 </head>
 </html>
