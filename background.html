@@ -1,18 +1,41 @@
-<html>
+<html> <!-- -*- coding: utf-8 ; mode: xml -->
+<head>
+<script type="text/javascript" src="scripts/init.js"></script>
 <script type="text/javascript">
-function exec_targets(pinned) {
-  if(pinned) 
-    chrome.tabs.executeScript(null, {file: "scripts/inject_targets.js"});  
-  else
-    chrome.tabs.executeScript(null, {file: "scripts/remove_targets.js"});  
-}
-
 chrome.tabs.onUpdated.addListener(function(id,info,tab) {
-  exec_targets(tab.pinned);
-});
-chrome.tabs.onCreated.addListener(function(tab) {
-  if(pinned) 
+  if(tab.pinned) { 
+    localStorage[tab.id] = true;
     chrome.tabs.executeScript(null, {file: "scripts/inject_targets.js"});  
+  } else {
+    var tabstate = localStorage.getItem(tab.id);
+    if(tabstate != undefined) { 
+      localStorage.removeItem(tab.id);
+      chrome.tabs.executeScript(null, {file: "scripts/remove_targets.js"});
+    }
+  }
+});
+
+chrome.tabs.onCreated.addListener(function(tab) {
+  if(tab.pinned) {
+    chrome.tabs.executeScript(null, {file: "scripts/inject_targets.js"});
+  }
+});
+
+chrome.tabs.onRemoved.addListener(function(id,info) {
+  var tabstate = localStorage.getItem(id);
+  if(tabstate != undefined) { 
+    localStorage.removeItem(id);
+    chrome.tabs.executeScript(null, {file: "scripts/remove_targets.js"});
+  }
+});
+
+chrome.tabs.onDetached.addListener(function(id,info) {
+  var tabstate = localStorage.getItem(id);
+  if(tabstate != undefined) { 
+    localStorage.removeItem(id);
+    chrome.tabs.executeScript(null, {file: "scripts/remove_targets.js"});
+  }
 });
 </script>
+</head>
 </html>
