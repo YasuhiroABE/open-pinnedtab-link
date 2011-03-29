@@ -3,15 +3,53 @@
 <script type="text/javascript" src="scripts/init.js"></script>
 <script type="text/javascript">
 
+var opts_enabled_default = JSON.parse(localStorage.getItem("opts_enabled_default"));
+if(opts_enabled_default == undefined) {
+  opts_enabled_default = true;
+}
+var opts_external_link_only_default = JSON.parse(localStorage.getItem("opts_external_link_only_default"));
+if(opts_external_link_only_default == undefined) {
+  opts_external_link_only_default = false;
+}
+
+// note: Until loading the page, the menu1 has been always checked.
+// note: 
+var menu1;
+function menu1OnClick(info,tab) {
+    if(tab != undefined && tab.pinned == true) {
+	var params = JSON.parse(localStorage.getItem(tab.id));
+	if(params != undefined) {
+	    params.enabled = ! params.enabled;
+	    if(menu1 != undefined) {
+		chrome.contextMenus.update(menu1,{"checked": params.enabled});
+	    }
+
+	    if(params.enabled == true) {
+		chrome.tabs.executeScript(null, {file: "scripts/inject_targets.js"});
+	    } else {
+		chrome.tabs.executeScript(null, {file: "scripts/remove_targets.js"});
+	    }
+	    localStorage[tab.id] = JSON.stringify(params);
+	}
+    }
+}
+menu1 = chrome.contextMenus.create({"title": "Enabled", "type": "checkbox", "onclick":menu1OnClick, "checked": opts_enabled_default});
+
+
+function initParams(tabid) {
+  params = {
+    enabled: opts_enabled_default,
+    external_link_only: opts_external_link_only_default
+  };
+  localStorage[tabid] = JSON.stringify(params);
+}
+
 chrome.tabs.onUpdated.addListener(function(id,info,tab) {
-  var params = localStorage.getItem(tab.id);
+  var params = JSON.parse(localStorage.getItem(tab.id));
   if(tab.pinned) {
     if (params == undefined) {
-      params = {
-        enabled:true,
-        external_link_only:false
-      };
-      localStorage[tab.id] = params;
+      initParams(tab.id);
+      params = JSON.parse(localStorage.getItem(tab.id));
     }
     if (params.enabled == true) {
       chrome.tabs.executeScript(null, {file: "scripts/inject_targets.js"});
@@ -22,31 +60,65 @@ chrome.tabs.onUpdated.addListener(function(id,info,tab) {
       chrome.tabs.executeScript(null, {file: "scripts/remove_targets.js"});
     }
   }
+  if(menu1 != undefined) {
+    if(params != undefined) {
+      chrome.contextMenus.update(menu1, {"checked":params.enabled});
+    } else {
+      chrome.contextMenus.update(menu1, {"checked":false});
+    }
+  }
 });
 
 chrome.tabs.onCreated.addListener(function(tab) {
+  var params = JSON.parse(localStorage.getItem(tab.id));
   if(tab.pinned) {
-    var params = localStorage.getItem(tab.id);
-    if(params != undefined && params.enabled == true) {
+    if(params == undefined) {
+      initParams(tab.id);
+      params = JSON.parse(localStorage.getItem(tab.id));
+    }
+    if(params.enabled == true) {
       chrome.tabs.executeScript(null, {file: "scripts/inject_targets.js"});
+    }
+  }
+  if(menu1 != undefined) {
+    if(params != undefined) {
+      chrome.contextMenus.update(menu1, {"checked":params.enabled});
+    } else {
+      chrome.contextMenus.update(menu1, {"checked":false});
+    }
+  }
+});
+
+chrome.tabs.onSelectionChanged.addListener(function(id,info) {
+  var params = JSON.parse(localStorage.getItem(id));
+  if(menu1 != undefined) {
+    if(params != undefined) {
+      chrome.contextMenus.update(menu1, {"checked":params.enabled});
+    } else {
+      chrome.contextMenus.update(menu1, {"checked":false});
     }
   }
 });
 
 chrome.tabs.onRemoved.addListener(function(id,info) {
-  var params = localStorage.getItem(id);
+  var params = JSON.parse(localStorage.getItem(id));
+  if(params != undefined) {
+    localStorage.removeItem(id);
+    chrome.tabs.executeScript(null, {file: "scripts/remove_targets.js"});
+  }
+});
+chrome.tabs.onDetached.addListener(function(id,info) {
+  var params = JSON.parse(localStorage.getItem(id));
   if(params != undefined) {
     localStorage.removeItem(id);
     chrome.tabs.executeScript(null, {file: "scripts/remove_targets.js"});
   }
 });
 
-chrome.tabs.onDetached.addListener(function(id,info) {
-  var params = localStorage.getItem(id);
-  if(params != undefined) {
-    localStorage.removeItem(id);
-    chrome.tabs.executeScript(null, {file: "scripts/remove_targets.js"});
-  }
+chrome.windows.onRemoved.addListener(function(windid) {
+  localStorage.clear();
+  localStorage["opts_enabled_default"] = JSON.stringify(opts_enabled_default);
+  localStorage["opts_external_link_only_default"] = JSON.stringify(opts_external_link_only_default);
 });
 
 </script>
