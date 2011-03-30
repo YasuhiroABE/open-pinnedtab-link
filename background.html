@@ -35,6 +35,7 @@ function menu1OnClick(info,tab) {
 	}
     }
 }
+
 menu1 = chrome.contextMenus.create({"title": "Enabled", "type": "checkbox", "onclick":menu1OnClick, "checked": opts_enabled_default});
 
 function initParams(tabid) {
@@ -44,8 +45,7 @@ function initParams(tabid) {
   };
   localStorage[tabid] = JSON.stringify(params);
 }
-function updateMenu1(tabid) {
-  var params = JSON.parse(localStorage.getItem(tabid));
+function updateMenu1(tabid, params) {
   if(menu1 != undefined) {
     if(params != undefined) {
       chrome.contextMenus.update(menu1,{"checked": params.enabled});
@@ -71,7 +71,7 @@ chrome.tabs.onUpdated.addListener(function(id,info,tab) {
       chrome.tabs.executeScript(tab.id, {file: "scripts/remove_targets.js"});
     }
   }
-  updateMenu1(tab.id);
+  updateMenu1(tab.id, params);
 });
 
 chrome.tabs.onCreated.addListener(function(tab) {
@@ -85,12 +85,13 @@ chrome.tabs.onCreated.addListener(function(tab) {
       chrome.tabs.executeScript(tab.id, {file: "scripts/inject_targets.js"});
     }
   }
-  updateMenu1(tab.id);
+  updateMenu1(tab.id, params);
 });
 
 // never create the new item when the params == null
 chrome.tabs.onSelectionChanged.addListener(function(id,info) {
-  updateMenu1(id);
+  var params = JSON.parse(localStorage.getItem(id));
+  updateMenu1(id, params);
 });
 
 chrome.tabs.onRemoved.addListener(function(id,info) {
