@@ -1,4 +1,7 @@
-<html> <!-- -*- coding: utf-8 ; mode: xml -->
+<html> <!-- -*- coding: utf-8 ; mode: xml -*-
+ Copyright (C) 2011 Yasuhiro ABE, yasu@yasundial.org.
+ Licensed under the Apache License, Version 2.0 (the "License")
+-->
 <head>
 <script type="text/javascript" src="scripts/init.js"></script>
 <script type="text/javascript">
@@ -12,8 +15,7 @@ if(opts_external_link_only_default == undefined) {
   opts_external_link_only_default = false;
 }
 
-// note: Until loading the page, the menu1 has been always checked.
-// note: 
+// note: Until loading the page, the menu1 has been always marked checked.
 var menu1;
 function menu1OnClick(info,tab) {
     if(tab != undefined && tab.pinned == true) {
@@ -35,13 +37,22 @@ function menu1OnClick(info,tab) {
 }
 menu1 = chrome.contextMenus.create({"title": "Enabled", "type": "checkbox", "onclick":menu1OnClick, "checked": opts_enabled_default});
 
-
 function initParams(tabid) {
   params = {
     enabled: opts_enabled_default,
     external_link_only: opts_external_link_only_default
   };
   localStorage[tabid] = JSON.stringify(params);
+}
+function updateMenu1(tabid) {
+  var params = JSON.parse(localStorage.getItem(tabid));
+  if(menu1 != undefined) {
+    if(params != undefined) {
+      chrome.contextMenus.update(menu1,{"checked": params.enabled});
+    } else {
+      chrome.contextMenus.update(menu1,{"checked": ! opts_enabled_default});
+    }
+  }
 }
 
 chrome.tabs.onUpdated.addListener(function(id,info,tab) {
@@ -60,13 +71,7 @@ chrome.tabs.onUpdated.addListener(function(id,info,tab) {
       chrome.tabs.executeScript(tab.id, {file: "scripts/remove_targets.js"});
     }
   }
-  if(menu1 != undefined) {
-    if(params != undefined) {
-      chrome.contextMenus.update(menu1, {"checked":params.enabled});
-    } else {
-      chrome.contextMenus.update(menu1, {"checked":false});
-    }
-  }
+  updateMenu1(tab.id);
 });
 
 chrome.tabs.onCreated.addListener(function(tab) {
@@ -80,21 +85,12 @@ chrome.tabs.onCreated.addListener(function(tab) {
       chrome.tabs.executeScript(tab.id, {file: "scripts/inject_targets.js"});
     }
   }
-  if(menu1 != undefined) {
-    if(params != undefined) {
-      chrome.contextMenus.update(menu1, {"checked":params.enabled});
-    } else {
-      chrome.contextMenus.update(menu1, {"checked":false});
-    }
-  }
+  updateMenu1(tab.id);
 });
 
 // never create the new item when the params == null
 chrome.tabs.onSelectionChanged.addListener(function(id,info) {
-  var params = JSON.parse(localStorage.getItem(id));
-  if(menu1 != undefined && params != undefined) {
-    chrome.contextMenus.update(menu1, {"checked":params.enabled});
-  }
+  updateMenu1(id);
 });
 
 chrome.tabs.onRemoved.addListener(function(id,info) {
