@@ -6,6 +6,8 @@
 <script type="text/javascript" src="scripts/init.js"></script>
 <script type="text/javascript">
 
+var debug = false;
+
 var opts_enabled_default = JSON.parse(localStorage.getItem("opts_enabled_default"));
 if(opts_enabled_default == undefined) {
   opts_enabled_default = true;
@@ -16,7 +18,7 @@ if(opts_external_link_only_default == undefined) {
 }
 
 // note: Until loading the page, the menu1 has been always marked checked.
-var menu1;
+var menu1 = chrome.contextMenus.create({"title": "Enabled", "type": "checkbox", "onclick":menu1OnClick, "checked": opts_enabled_default});
 function menu1OnClick(info,tab) {
     if(tab != undefined && tab.pinned == true) {
 	var params = JSON.parse(localStorage.getItem(tab.id));
@@ -36,8 +38,6 @@ function menu1OnClick(info,tab) {
     }
 }
 
-menu1 = chrome.contextMenus.create({"title": "Enabled", "type": "checkbox", "onclick":menu1OnClick, "checked": opts_enabled_default});
-
 function initParams(tabid) {
   params = {
     enabled: opts_enabled_default,
@@ -46,16 +46,20 @@ function initParams(tabid) {
   localStorage[tabid] = JSON.stringify(params);
 }
 function updateMenu1(tabid, params) {
+  if(debug) { console.log("updateMenu1(tabid=" + tabid + ",params)"); }
   if(menu1 != undefined) {
     if(params != undefined) {
+      if(debug) { console.log("updateMenu1: params != undefined"); }
       chrome.contextMenus.update(menu1,{"checked": params.enabled});
     } else {
+      if(debug) { console.log("updateMenu1: params == undefined"); }
       chrome.contextMenus.update(menu1,{"checked": ! opts_enabled_default});
     }
   }
 }
 
 chrome.tabs.onUpdated.addListener(function(id,info,tab) {
+  if(debug) { console.log("onUpdated(id=" + id + ",info,tab.id=" + tab.id + ")"); }
   var params = JSON.parse(localStorage.getItem(tab.id));
   if(tab.pinned) {
     if (params == undefined) {
@@ -75,6 +79,7 @@ chrome.tabs.onUpdated.addListener(function(id,info,tab) {
 });
 
 chrome.tabs.onCreated.addListener(function(tab) {
+  if(debug) { console.log("onCreated(" + tab.id + ")"); }
   var params = JSON.parse(localStorage.getItem(tab.id));
   if(tab.pinned) {
     if(params == undefined) {
@@ -90,18 +95,25 @@ chrome.tabs.onCreated.addListener(function(tab) {
 
 // never create the new item when the params == null
 chrome.tabs.onSelectionChanged.addListener(function(id,info) {
+  if(debug) { console.log("onSelectionChanged(id=" + id + ",info)"); }
   var params = JSON.parse(localStorage.getItem(id));
   updateMenu1(id, params);
 });
 
 chrome.tabs.onRemoved.addListener(function(id,info) {
+  if(debug) { console.log("onRemoved(id=" + id + ",info)"); }
   var params = JSON.parse(localStorage.getItem(id));
   if(params != undefined) {
     localStorage.removeItem(id);
     chrome.tabs.executeScript(null, {file: "scripts/remove_targets.js"});
   }
 });
+
+chrome.tabs.onAttached.addListener(function(id,info) {
+  if(debug) { console.log("onAttached(id=" + id + ",info)"); }
+});
 chrome.tabs.onDetached.addListener(function(id,info) {
+  if(debug) { console.log("onDetached(id=" + id + ",info)"); }
   var params = JSON.parse(localStorage.getItem(id));
   if(params != undefined) {
     localStorage.removeItem(id);
