@@ -1,6 +1,6 @@
 {
   "name": "Open PinnedTab Link",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "Open a link in a pinned tab within a new tab",
   "icons": {
     "16": "icons/16.png",

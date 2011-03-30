@@ -140,6 +140,7 @@ chrome.tabs.onUpdated.addListener(function(id,info,tab) {
 
 // when started the main window, the onSelectionChanged is never called.
 // so, for the first time invocation, you need to define this method as well as onSelectionChanged().
+// it might be a bug of chrome or my misunderstand about the usage of APIs.
 chrome.tabs.onCreated.addListener(function(tab) {
   if(debug) { console.log("onCreated(" + tab.id + ")"); }
   var params = JSON.parse(localStorage.getItem(tab.id));
@@ -157,6 +158,7 @@ chrome.tabs.onCreated.addListener(function(tab) {
 });
 
 // never create the new item when the params == null
+// but, it is possible that it will be called at first without calling the onCreated or onUpdated method.
 chrome.tabs.onSelectionChanged.addListener(function(id,info) {
   if(debug) { console.log("onSelectionChanged(id=" + id + ",info)"); }
   var params = JSON.parse(localStorage.getItem(id));
