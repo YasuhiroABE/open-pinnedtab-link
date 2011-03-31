@@ -15,15 +15,10 @@ var opts_external_link_only_default = JSON.parse(localStorage.getItem("opts_exte
 if(opts_external_link_only_default == undefined) {
   opts_external_link_only_default = false;
 }
-var opts_delete_tab_state_default = JSON.parse(localStorage.getItem("opts_delete_tab_state_default"));
-if(opts_delete_tab_state_default == undefined) {
-  opts_delete_tab_state_default = true;
-}
 
 function updateOptions() {
   opts_enabled_default = JSON.parse(localStorage.getItem("opts_enabled_default"));
   opts_external_link_only_default = JSON.parse(localStorage.getItem("opts_external_link_only_default"));
-  opts_delete_tab_state_default = JSON.parse(localStorage.getItem("opts_delete_tab_state_default"));
 }
 
 function execInjection(tabid, host, params) {
@@ -174,7 +169,7 @@ chrome.tabs.onSelectionChanged.addListener(function(id,info) {
   var params = JSON.parse(localStorage.getItem(id));
   updateMenu1(id, params);
   updateMenu2(id, params);
-  updateOptions()
+  updateOptions();
 });
 
 chrome.tabs.onRemoved.addListener(function(id,info) {
@@ -192,35 +187,15 @@ chrome.tabs.onDetached.addListener(function(id,info) {
   if(debug) { console.log("onDetached(id=" + id + ",info)"); }
 });
 
-
-
-var tab_list = Array();
 chrome.windows.onFocusChanged.addListener(function(windid) {
-  if(debug) { console.log("onFocusChanged(windowId=" + windid + ")"); }
-  if(windid != chrome.windows.WINDOW_ID_NONE) {
-    chrome.tabs.getAllInWindow(windid, function(tab_array) {
-      tab_list[windid] = JSON.stringify(tab_array);
-    });
-  }
+  if(debug) { console.log("windows.onFocusChanged(windowId=" + windid + ")"); }
 });
 
 chrome.windows.onRemoved.addListener(function(windid) {
-  if(debug) { console.log("onRemoved(windowId=" + windid + ")"); }
-  // localStorage.clear();
-  if(opts_delete_tab_state_default == true) {
-    var tab_array = JSON.parse(tab_list[windid]);
-    if(tab_array != undefined) {
-      for(var i=0; i< tab_array.length; i++) {
-        var params = localStorage.getItem(tab_array[i].id);
-        if(params != undefined) {
-          localStorage.removeItem(tab_array[i].id);
-        }
-      }
-    }
-  }
+  if(debug) { console.log("windows.onRemoved(windowId=" + windid + ")");   }
+
   localStorage["opts_enabled_default"] = JSON.stringify(opts_enabled_default);
   localStorage["opts_external_link_only_default"] = JSON.stringify(opts_external_link_only_default);
-  localStorage["opts_delete_tab_state_default"] = JSON.stringify(opts_delete_tab_state_default);
 });
 
 </script>
