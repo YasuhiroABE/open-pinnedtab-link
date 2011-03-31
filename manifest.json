@@ -1,16 +1,16 @@
 {
-  "name": "Open PinnedTab Link",
-  "version": "2.0.1",
-  "description": "Open a link in a pinned tab within a new tab",
-  "icons": {
-    "16": "icons/16.png",
-    "32": "icons/32.png",
-    "48": "icons/48.png",
-    "64": "icons/64.png",
-    "128": "icons/128.png"
-  },
-  "background_page": "background.html",
-  "permissions": [
-      "contextMenus", "tabs", "http://*/*", "https://*/*"
-  ]
+   "background_page": "background.html",
+   "description": "Open a link in a pinned tab with a new tab.",
+   "icons": {
+      "128": "icons/128.png",
+      "16": "icons/16.png",
+      "32": "icons/32.png",
+      "48": "icons/48.png",
+      "64": "icons/64.png"
+   },
+   "key": "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDQKQngs+sMU5ULfvD23L8YcGEdveY92f0mYWpFXl5h8YNAhNx29iwgLoLuMqFGO4eH9YPUAcsU4NOa/llhPFIA/KBFoN960rfq2rW7yyQSwmgoWvN5WjjTlyl8gPlFzKO4GrEttyQHvBFFBXQkzAbTw5gHbB5UDbwtsVpY8peqKwIDAQAB",
+   "name": "Open PinnedTab Link",
+   "permissions": [ "tabs", "http://*/*", "https://*/*" ],
+   "update_url": "http://clients2.google.com/service/update2/crx",
+   "version": "1.1.0"
 }

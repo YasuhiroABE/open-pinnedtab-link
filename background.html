@@ -1,198 +1,41 @@
-<html> <!-- -*- coding: utf-8 ; mode: xml -*-
- Copyright (C) 2011 Yasuhiro ABE, yasu@yasundial.org.
- Licensed under the Apache License, Version 2.0 (the "License")
--->
+<html> <!-- -*- coding: utf-8 ; mode: xml -->
 <head>
+<script type="text/javascript" src="scripts/init.js"></script>
 <script type="text/javascript">
-
-var debug = false;
-
-var opts_enabled_default = JSON.parse(localStorage.getItem("opts_enabled_default"));
-if(opts_enabled_default == undefined) {
-  opts_enabled_default = true;
-}
-var opts_external_link_only_default = JSON.parse(localStorage.getItem("opts_external_link_only_default"));
-if(opts_external_link_only_default == undefined) {
-  opts_external_link_only_default = false;
-}
-
-function execInjection(tabid, host, params) {
-  if(debug) {
-    console.log("execInjection(tabid=" + tabid + ", host=" + host +",params)");
-    console.log("params.enabled: " + params.enabled);
-    console.log("params.external_link_only: " + params.external_link_only);
-  }
-  if(host == undefined || params == undefined) {
-    var s = {code:""};
-    s.code = 'var al = document.getElementsByTagName("a");for(var i=0; i < al.length; i++){    al[i].setAttribute("target","_blank");}';
-    chrome.tabs.executeScript(tabid, s);
-  } else {
-    var s = {code:""};
-    s.code += 'var al = document.getElementsByTagName("a");'
-    s.code += 'for(var i=0; i < al.length; i++){';
-    s.code += '  var a = document.createElement("a");';
-    s.code += '  a.href = "' + host + '";';
-    s.code += '  if(' + params.external_link_only + ') {';
-    s.code += '    if(a.hostname != al[i].hostname) {';
-    s.code += '      al[i].setAttribute("target","_blank");';
-    s.code += '    } else {';
-    s.code += '      al[i].setAttribute("target","");';
-    s.code += '    }';
-    s.code += '  } else {';
-    s.code += '    al[i].setAttribute("target","_blank");';
-    s.code += '  }';
-    s.code += '}';
-    if(debug) { console.log("execInjection: s.code = " + s.code); }
-    chrome.tabs.executeScript(tabid, s);
-  }
-}
-function execRemove(tabid) {
-  chrome.tabs.executeScript(tabid, {file: "scripts/remove_targets.js"});
-}
-
-// note: Until loading the page, the menu1 has been always marked checked.
-var menu1 = chrome.contextMenus.create({"title": "Enabled", "type": "checkbox", "onclick":menu1OnClick, "checked": opts_enabled_default});
-var menu2 = chrome.contextMenus.create({"title": "Exclude same host", "type": "checkbox", "onclick":menu2OnClick, "checked": opts_external_link_only_default});
-function menu1OnClick(info,tab) {
-    if(tab != undefined && tab.pinned == true) {
-	var params = JSON.parse(localStorage.getItem(tab.id));
-	if(params != undefined) {
-	    params.enabled = ! params.enabled;
-	    if(menu1 != undefined) {
-		chrome.contextMenus.update(menu1,{"checked": params.enabled});
-	    }
-
-	    if(params.enabled == true) {
-		execInjection(tab.id, tab.url, params);
-	    } else {
-		execRemove(tab.id);
-	    }
-	    localStorage[tab.id] = JSON.stringify(params);
-	}
-    }
-}
-function menu2OnClick(info,tab) {
-    if(tab != undefined && tab.pinned == true) {
-	var params = JSON.parse(localStorage.getItem(tab.id));
-	if(params != undefined) {
-	    params.external_link_only = ! params.external_link_only;
-	    if(menu2 != undefined) {
-		chrome.contextMenus.update(menu1,{"checked": params.external_link_only});
-	    }
-            execInjection(tab.id, tab.url, params);
-	    localStorage[tab.id] = JSON.stringify(params);
-	}
-    }
-}
-
-function initParams(tabid) {
-  params = {
-    enabled: opts_enabled_default,
-    external_link_only: opts_external_link_only_default
-  };
-  localStorage[tabid] = JSON.stringify(params);
-}
-function updateMenu1(tabid, params) {
-  if(debug) { console.log("updateMenu1(tabid=" + tabid + ",params)"); }
-  if(menu1 != undefined) {
-    if(params != undefined) {
-      if(debug) { console.log("updateMenu1: params != undefined"); }
-      chrome.contextMenus.update(menu1,{"checked": params.enabled});
-    } else {
-      if(debug) { console.log("updateMenu1: params == undefined"); }
-      chrome.contextMenus.update(menu1,{"checked": ! opts_enabled_default});
-    }
-  }
-}
-function updateMenu2(tabid, params) {
-  if(debug) { console.log("updateMenu2(tabid=" + tabid + ",params)"); }
-  if(menu1 != undefined) {
-    if(params != undefined) {
-      if(debug) { console.log("updateMenu2: params != undefined"); }
-      chrome.contextMenus.update(menu2,{"checked": params.external_link_only});
-    } else {
-      if(debug) { console.log("updateMenu2: params == undefined"); }
-      chrome.contextMenus.update(menu2,{"checked": opts_external_link_only_default});
-    }
-  }
-}
-
 chrome.tabs.onUpdated.addListener(function(id,info,tab) {
-  if(debug) { console.log("onUpdated(id=" + id + ",info,tab.id=" + tab.id + ")"); }
-  var params = JSON.parse(localStorage.getItem(tab.id));
-  if(tab.pinned) {
-    if (params == undefined) {
-      initParams(tab.id);
-      params = JSON.parse(localStorage.getItem(tab.id));
-    }
-    if (params.enabled == true) {
-      execInjection(tab.id, tab.url, params);
-    }
+  if(tab.pinned) { 
+    localStorage[tab.id] = true;
+    chrome.tabs.executeScript(null, {file: "scripts/inject_targets.js"});  
   } else {
-    if(params != undefined) {
+    var tabstate = localStorage.getItem(tab.id);
+    if(tabstate != undefined) { 
       localStorage.removeItem(tab.id);
-      execRemove(tab.id);
+      chrome.tabs.executeScript(null, {file: "scripts/remove_targets.js"});
     }
   }
-  updateMenu1(tab.id, params);
-  updateMenu2(tab.id, params);
 });
 
-// when started the main window, the onSelectionChanged is never called.
-// so, for the first time invocation, you need to define this method as well as onSelectionChanged().
-// it might be a bug of chrome or my misunderstand about the usage of APIs.
 chrome.tabs.onCreated.addListener(function(tab) {
-  if(debug) { console.log("onCreated(" + tab.id + ")"); }
-  var params = JSON.parse(localStorage.getItem(tab.id));
   if(tab.pinned) {
-    if(params == undefined) {
-      initParams(tab.id);
-      params = JSON.parse(localStorage.getItem(tab.id));
-    }
-    if(params.enabled == true) {
-      execInjection(tab.id, tab.url, params);
-    }
+    chrome.tabs.executeScript(null, {file: "scripts/inject_targets.js"});
   }
-  updateMenu1(tab.id, params);
-  updateMenu2(tab.id, params);
-});
-
-// never create the new item when the params == null
-// but, it is possible that it will be called at first without calling the onCreated or onUpdated method.
-chrome.tabs.onSelectionChanged.addListener(function(id,info) {
-  if(debug) { console.log("onSelectionChanged(id=" + id + ",info)"); }
-  var params = JSON.parse(localStorage.getItem(id));
-  updateMenu1(id, params);
-  updateMenu2(id, params);
 });
 
 chrome.tabs.onRemoved.addListener(function(id,info) {
-  if(debug) { console.log("onRemoved(id=" + id + ",info)"); }
-  var params = JSON.parse(localStorage.getItem(id));
-  if(params != undefined) {
+  var tabstate = localStorage.getItem(id);
+  if(tabstate != undefined) { 
     localStorage.removeItem(id);
-    execRemove(id);
+    chrome.tabs.executeScript(null, {file: "scripts/remove_targets.js"});
   }
 });
 
-chrome.tabs.onAttached.addListener(function(id,info) {
-  if(debug) { console.log("onAttached(id=" + id + ",info)"); }
-});
 chrome.tabs.onDetached.addListener(function(id,info) {
-  if(debug) { console.log("onDetached(id=" + id + ",info)"); }
-  var params = JSON.parse(localStorage.getItem(id));
-  if(params != undefined) {
+  var tabstate = localStorage.getItem(id);
+  if(tabstate != undefined) { 
     localStorage.removeItem(id);
-    execRemove(id);
+    chrome.tabs.executeScript(null, {file: "scripts/remove_targets.js"});
   }
 });
-
-chrome.windows.onRemoved.addListener(function(windid) {
-  localStorage.clear();
-  localStorage["opts_enabled_default"] = JSON.stringify(opts_enabled_default);
-  localStorage["opts_external_link_only_default"] = JSON.stringify(opts_external_link_only_default);
-});
-
 </script>
 </head>
 </html>
