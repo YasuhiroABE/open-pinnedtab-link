@@ -12,17 +12,18 @@ body
 div.contents 
 {
   width: 460px;
-  padding: 42px;
+  margin: 42px;
   white-space: nowrap;
+  border: 1px solid #000000;
 }
 h2
 {
   background-color: #0fafaf;
+  margin-top: 0;
   margin-bottom: 0;
 }
 table
 {
-  border: 1px solid #000000;
   margin-top: 0;
   margin-bottom: 10px;
   padding: 10px;
@@ -76,33 +77,54 @@ table th
       if(c.checked == true) {
         localStorage["opts_external_link_only_default"] = JSON.parse(c.value);
       }
-    }
-    
+    }    
   }
+
+  function set_text() {
+    // other settings
+    var e = document.getElementById("opts_title");
+    var t = document.createTextNode(chrome.i18n.getMessage("opts_title"));
+    e.appendChild(t);
+
+    e = document.getElementById("opts_title_enabled");
+    t = document.createTextNode(chrome.i18n.getMessage("opts_title_enabled"));
+    e.appendChild(t);
+    e = document.getElementById("opts_title_exclude");
+    t = document.createTextNode(chrome.i18n.getMessage("opts_title_exclude"));
+    e.appendChild(t);
+
+    e = document.getElementById("opts_button_reset");
+    t = document.createTextNode(chrome.i18n.getMessage("opts_button_reset"));
+    e.appendChild(t);
+    e = document.getElementById("opts_button_save");
+    t = document.createTextNode(chrome.i18n.getMessage("opts_button_save"));
+    e.appendChild(t);
+  }
+
 </script>
 </head>
-<body onload="restore_options()">
+<body onload="restore_options(); set_text()">
+  <h1>Open PinnedTab Link</h1>
   <div class="contents">
-    <h1>Open PinnedTab Link</h1>
-    <h2>Default Option Settings</h2>
+    <h2 id="opts_title"></h2>
     <table>
       <tr>
-	<th>Enable to open new tab</th>
+	<th id="opts_title_enabled"></th>
 	<td><input type="radio" name="enabled" value="true"/>True <br />
 	  <input type="radio" name="enabled" value="false"/>False
 	</td>
       </tr>
       
       <tr>
-      <th>Open the link of the same hostname within the same tab</th>
+      <th id="opts_title_exclude"></th>
       <td><input type="radio" name="exclude_same_hostname" value="true"/>True <br />
 	<input  type="radio" name="exclude_same_hostname" value="false"/>False
       </td>
       </tr>
     </table>
     
-    <button onclick="restore_options()">Reset</button>
-    <button onclick="save_options()">Save</button>
+    <button onclick="restore_options()" id="opts_button_reset"></button>
+    <button onclick="save_options()" id="opts_button_save"></button>
   </div>  
 </body>
 </html>

@@ -1,0 +1,28 @@
+{
+  "manifest_desc": {
+    "message": "Open a link in a pinned tab using a new tab.",
+    "description": ""
+  },
+  "menu_enabled": {
+    "message": "Enabled",
+    "description": "Enabled message in the context menu."
+  },
+  "menu_exclude": {
+    "message": "Exclude same host link"
+  },
+  "opts_title": {
+    "message": "Default Option Settings"
+  },
+  "opts_title_enabled": {
+    "message": "Enable to open new tab"
+  },
+  "opts_title_exclude": {
+    "message": "Open the link of the same hostname within the same tab"
+  },
+  "opts_button_save": {
+     "message": "Save"
+  },
+  "opts_button_reset": {
+     "message": "Reset"
+  }
+}

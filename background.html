@@ -68,8 +68,8 @@ function execRemoveTarget(tabid) {
 }
 
 // note: Until loading the page, the menu1 has been always marked checked.
-var menu1 = chrome.contextMenus.create({"title": "Enabled", "type": "checkbox", "onclick":menu1OnClick, "checked": opts_enabled_default});
-var menu2 = chrome.contextMenus.create({"title": "Exclude same host", "type": "checkbox", "onclick":menu2OnClick, "checked": opts_external_link_only_default});
+var menu1 = chrome.contextMenus.create({"title": chrome.i18n.getMessage("menu_enabled"), "type": "checkbox", "onclick":menu1OnClick, "checked": opts_enabled_default});
+var menu2 = chrome.contextMenus.create({"title": chrome.i18n.getMessage("menu_exclude"), "type": "checkbox", "onclick":menu2OnClick, "checked": opts_external_link_only_default});
 function menu1OnClick(info,tab) {
     if(tab != undefined && tab.pinned == true) {
 	var params = JSON.parse(localStorage.getItem(tab.id));

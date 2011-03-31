@@ -1,0 +1,26 @@
+{
+  "manifest_desc": {
+    "message": "ピンタブの中から開くリンクを新しいタブに表示します。"
+  },
+  "menu_enabled": {
+    "message": "有効化"
+  },
+  "menu_exclude": {
+    "message": "同一ホストでは無効"
+  },
+  "opts_title": {
+    "message": "オプション設定"
+  },
+  "opts_title_enabled": {
+    "message": "有効化"
+  },
+  "opts_title_exclude": {
+    "message": "同一ホスト内のリンクは同じタブ内で表示"
+  },
+  "opts_button_save": {
+     "message": "保存"
+  },
+  "opts_button_reset": {
+     "message": "リセット"
+  }
+}
