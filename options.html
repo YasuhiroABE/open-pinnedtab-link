@@ -1,6 +1,37 @@
-<?xml version="1.0" encoding="UTF-8" ?><!-- -*- encoding: utf-8 ; mode: xml -*- -->
+<?xml version="1.0" encoding="UTF-8" ?><!-- -*- coding: utf-8 ; mode: xml -*- -->
 <html>
 <head>
+<style type="text/css">
+body
+{
+  background-color: #ffffff;
+  color: #000000;
+  margin: 0;
+  padding: 0;
+}
+div.contents 
+{
+  width: 460px;
+  padding: 42px;
+  white-space: nowrap;
+}
+h2
+{
+  background-color: #0fafaf;
+  margin-bottom: 0;
+}
+table
+{
+  border: 1px solid #000000;
+  margin-top: 0;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+table th
+{
+  text-align: left;
+}
+</style>
 <script type="text/javascript">
   function restore_options() {
     var opts_1 = localStorage.getItem("opts_enabled_default");
@@ -51,22 +82,27 @@
 </script>
 </head>
 <body onload="restore_options()">
-
-  <h1>Open PinnedTab Link</h1>
-  <h2>Option Settings</h2>
-  <dl>
-    <dt>Enabled</dt>
-    <dd><input type="radio" name="enabled" value="true"/>True <br />
-      <input type="radio" name="enabled" value="false"/>False
-    </dd>
+  <div class="contents">
+    <h1>Open PinnedTab Link</h1>
+    <h2>Default Option Settings</h2>
+    <table>
+      <tr>
+	<th>Enable to open new tab</th>
+	<td><input type="radio" name="enabled" value="true"/>True <br />
+	  <input type="radio" name="enabled" value="false"/>False
+	</td>
+      </tr>
+      
+      <tr>
+      <th>Open the link of the same hostname within the same tab</th>
+      <td><input type="radio" name="exclude_same_hostname" value="true"/>True <br />
+	<input  type="radio" name="exclude_same_hostname" value="false"/>False
+      </td>
+      </tr>
+    </table>
     
-    <dt>Open the link of the same hostname within the same tab</dt>
-    <dd><input type="radio" name="exclude_same_hostname" value="true"/>True <br />
-      <input  type="radio" name="exclude_same_hostname" value="false"/>False
-    </dd>
-  </dl>
-  
-  <button onclick="save_options()">Save</button>
-  
+    <button onclick="restore_options()">Reset</button>
+    <button onclick="save_options()">Save</button>
+  </div>  
 </body>
 </html>
