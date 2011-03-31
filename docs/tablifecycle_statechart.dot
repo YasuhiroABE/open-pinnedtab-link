@@ -1,0 +1,47 @@
+
+// Statechart diagram of chrome.tabs.on*()
+
+digraph G {
+
+  comment [shape=note, label="Events Statechart of\nchrome.tabs."];
+
+  start [shape=circle, label="", style=filled];
+  normal [shape=rect label="Normal state"];
+  closed [shape=doublecircle, label="", style=filled];
+
+  onCreated [label="onCreated()"];
+  onSelectionChanged [label="onSelectionChanged()"];
+  onSelectionChanged_ [label="onSelectionChanged()"];
+  onUpdated [label="onUpdated()"];
+  onRemoved [label="onRemoved()"];
+  onMoved [label="onMoved()"];
+  onDetached [label="onDetached()"];
+  onAttached [label="onAttached()"];
+
+  start -> onCreated [label="create_tab()"];
+  onCreated -> onSelectionChanged_;
+  onSelectionChanged_ -> onUpdated;
+  onUpdated -> normal;
+
+  // normal state
+  normal -> normal;
+  normal -> onSelectionChanged [label="change_focus()"];
+  onSelectionChanged -> normal;
+
+  // change tab position
+  normal -> onMoved;
+  onMoved -> normal;
+
+  // pin or unpin tab
+  normal -> onUpdated [label="(un)pin_tab() /\nreload()"];
+
+  // dock or undock tab
+  normal -> onDetached [label="(un)dock_tab()"];
+  onDetached -> onAttached;
+  onAttached -> onSelectionChanged [label="change_focus()"];
+
+  // close tab
+  normal -> onRemoved [label="close_tab()"];
+  onRemoved -> onSelectionChanged [label="change_focus()"];
+  onRemoved -> closed;
+}
