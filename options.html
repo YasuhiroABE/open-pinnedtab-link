@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?><!-- -*- encoding: utf-8 ; mode: xml -*- -->
+<html>
+<head>
+<script type="text/javascript">
+  function restore_options() {
+    var opts_1 = localStorage.getItem("opts_enabled_default");
+    if(opts_1 == undefined || opts_1 == "undefined") {
+      localStorage["opts_enabled_default"] = true;
+    }
+    var opts_2 = localStorage.getItem("opts_external_link_only_default");
+    if(opts_2 == undefined || opts_2 == "undefined") {
+      localStorage["opts_external_link_only_default"] = false;
+    }
+    
+    var input_enabled = document.getElementsByName("enabled");
+    for(var i in input_enabled) {
+      var c = input_enabled[i];
+      if(c.value == (""+localStorage["opts_enabled_default"])) {
+        c.checked = true;
+      }
+    }
+  
+    var input_exclude_same_hostname = document.getElementsByName("exclude_same_hostname");
+    for(var i in input_exclude_same_hostname) {
+      var c = input_exclude_same_hostname[i];
+      if(c.value == (""+localStorage["opts_external_link_only_default"])) {
+        c.checked = true;
+      }
+    }
+  }
+  
+  function save_options() {
+  
+    var input_enabled = document.getElementsByName("enabled");
+    for(var i in input_enabled) {
+      var c = input_enabled[i];
+      if(c.checked == true) {
+        localStorage["opts_enabled_default"] = JSON.parse(c.value);
+      }
+    }
+
+    var input_exclude_same_hostname = document.getElementsByName("exclude_same_hostname");
+    for(var i in input_exclude_same_hostname) {
+      var c = input_exclude_same_hostname[i];
+      if(c.checked == true) {
+        localStorage["opts_external_link_only_default"] = JSON.parse(c.value);
+      }
+    }
+    
+  }
+</script>
+</head>
+<body onload="restore_options()">
+
+  <h1>Open PinnedTab Link</h1>
+  <h2>Option Settings</h2>
+  <dl>
+    <dt>Enabled</dt>
+    <dd><input type="radio" name="enabled" value="true"/>True <br />
+      <input type="radio" name="enabled" value="false"/>False
+    </dd>
+    
+    <dt>Open the link of the same hostname within the same tab</dt>
+    <dd><input type="radio" name="exclude_same_hostname" value="true"/>True <br />
+      <input  type="radio" name="exclude_same_hostname" value="false"/>False
+    </dd>
+  </dl>
+  
+  <button onclick="save_options()">Save</button>
+  
+</body>
+</html>
