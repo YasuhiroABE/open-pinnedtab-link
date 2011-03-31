@@ -7,20 +7,30 @@
 
 var debug = true;
 
-var opts_enabled_default = JSON.parse(localStorage.getItem("opts_enabled_default"));
-if(opts_enabled_default == undefined) {
+var opts_enabled_default;
+var opts_external_link_only_default;
+var opts_1 = localStorage.getItem("opts_enabled_default");
+if(opts_1 == undefined || opts_1 == "undefined") {
   opts_enabled_default = true;
+} else {
+  opts_enabled_default = JSON.parse(opts_1);
 }
-var opts_external_link_only_default = JSON.parse(localStorage.getItem("opts_external_link_only_default"));
-if(opts_external_link_only_default == undefined) {
+var opts_2 = localStorage.getItem("opts_external_link_only_default");
+if(opts_2 == undefined || opts_2 == "undefined") {
   opts_external_link_only_default = false;
+} else {
+  opts_external_link_only_default = JSON.parse(opts_2);
+}
+if(debug) {
+  console.log("typeof(opts_enabled_default) = " + typeof(opts_enabled_default));
+  console.log("typeof(opts_external_link_only_default) = " + typeof(opts_external_link_only_default));
 }
 localStorage["opts_enabled_default"] = JSON.stringify(opts_enabled_default);
 localStorage["opts_external_link_only_default"] = JSON.stringify(opts_external_link_only_default);
 
 function updateOptions() {
-  localStorage["opts_enabled_default"] = JSON.stringify(opts_enabled_default);
-  localStorage["opts_external_link_only_default"] = JSON.stringify(opts_external_link_only_default);
+  opts_enabled_default = JSON.parse(localStorage["opts_enabled_default"]);
+  opts_external_link_only_default = JSON.parse(localStorage["opts_external_link_only_default"]);
 }
 
 function execInjection(tabid, host, params) {

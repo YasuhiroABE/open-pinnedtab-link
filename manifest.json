@@ -1,6 +1,6 @@
 {
   "name": "Open PinnedTab Link",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "[dev. version] Open a link in a pinned tab using a new tab.",
   "icons": {
     "16": "icons/16.png",
@@ -12,5 +12,6 @@
   "background_page": "background.html",
   "permissions": [
       "contextMenus", "tabs", "http://*/*", "https://*/*"
-  ]
+  ],
+  "options_page": "options.html"
 }
