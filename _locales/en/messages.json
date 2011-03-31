@@ -8,7 +8,7 @@
     "description": "Enabled message in the context menu."
   },
   "menu_exclude": {
-    "message": "Exclude same host link"
+    "message": "Exclude links in same domain"
   },
   "opts_title": {
     "message": "Default Option Settings"
