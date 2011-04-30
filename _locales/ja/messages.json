@@ -6,10 +6,10 @@
     "message": "有効化"
   },
   "menu_exclude": {
-    "message": "同一ホストでは無効"
+    "message": "同一ホスト内のリンクは除く"
   },
   "opts_title": {
-    "message": "オプション設定"
+    "message": "コンテキストメニューのデフォルト値"
   },
   "opts_title_enabled": {
     "message": "有効化"
@@ -22,5 +22,35 @@
   },
   "opts_button_reset": {
      "message": "リセット"
+  },
+  "localdata_table_title": {
+     "message": "ローカルストレージデータ"
+  },
+  "top_title": {
+     "message": "Open PinnedTab Link設定ページ"
+  },
+  "localdata_note": {
+     "message": "このChrome機能拡張はHTML5で定義されているlocalStorage機能を使用しています。格納されている全データは次の通りです。もし削除する場合には、「全削除」ボタンを押してください。"
+  },
+  "localdata_button_removeall": {
+     "message": "全削除"
+  },
+  "localdata_table_label_keys": {
+     "message": "キー"
+  },
+  "localdata_table_label_values": {
+     "message": "値"
+  },
+  "opts_note": {
+     "message": "コンテキストメニューに表示される各Pinタブの初期設定値を表示しています。"
+  },
+  "opts_header_title": {
+     "message": "設定項目"
+  },
+  "opts_header_true": {
+     "message": "ON"
+  },
+  "opts_header_false": {
+     "message": "OFF"
   }
 }
