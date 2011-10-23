@@ -1,21 +1,21 @@
 {
   "manifest_desc": {
-    "message": "Open a link in a pinned tab using a new tab."
+    "message": "Open links from pinned tabs into new tabs."
   },
   "menu_enabled": {
     "message": "Enabled"
   },
   "menu_exclude": {
-    "message": "Exclude links in same domain"
+    "message": "Outbound Links Only"
   },
   "opts_title": {
     "message": "Context Menu Options"
   },
   "opts_title_enabled": {
-    "message": "Enable to open new tab"
+    "message": "Enabled: Clicked links will open in new tabs."
   },
   "opts_title_exclude": {
-    "message": "Open the link of the same hostname within the same tab"
+    "message": "Outbound Links Only: Keep links to the same domain in the pinned tab."
   },
   "opts_contextmenu_enabled": {
     "message": "Enable the context menu"
@@ -33,7 +33,7 @@
      "message": "Open PinnedTab Link Settings"
   },
   "localdata_note": {
-     "message": "This extension uses the localStorage function defined since HTML5. Following table shows the all data which is stored at the localStorage database. If you want to reset the data, please push the 'Remove All' button."
+     "message": "This extension uses the localStorage function defined in HTML5. Following table shows the all data which is stored in the localStorage database. The 'Remove All' button below will remove all currently stored data. You may need to reload pinned tabs after resetting this data to ensure the proper settings are applied."
   },
   "localdata_button_removeall": {
      "message": "Remove All"
@@ -45,7 +45,7 @@
      "message": "Value"
   },
   "opts_note": {
-     "message": "The following table shows default variables of the context menu."
+     "message": "When you pin a new tab, the default settings below will apply to that tab. You can change these later from the context menu."
   },
   "opts_header_title": {
      "message": "Items"
