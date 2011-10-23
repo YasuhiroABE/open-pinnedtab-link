@@ -17,6 +17,9 @@
   "opts_title_exclude": {
     "message": "同一ホスト内のリンクは同じタブ内で表示"
   },
+  "opts_contextmenu_enabled": {
+    "message": "コンテキストメニューを表示"
+  },
   "opts_button_save": {
      "message": "保存"
   },
@@ -51,6 +54,15 @@
      "message": "ON"
   },
   "opts_header_false": {
+     "message": "OFF"
+  },
+  "opts_header_title2": {
+     "message": "設定項目"
+  },
+  "opts_header_true2": {
+     "message": "ON"
+  },
+  "opts_header_false2": {
      "message": "OFF"
   }
 }

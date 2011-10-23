@@ -9,13 +9,16 @@
     "message": "Exclude links in same domain"
   },
   "opts_title": {
-    "message": "Default Context Menu Settings"
+    "message": "Context Menu Options"
   },
   "opts_title_enabled": {
     "message": "Enable to open new tab"
   },
   "opts_title_exclude": {
     "message": "Open the link of the same hostname within the same tab"
+  },
+  "opts_contextmenu_enabled": {
+    "message": "Enable the context menu"
   },
   "opts_button_save": {
      "message": "Save"
@@ -51,6 +54,15 @@
      "message": "ON"
   },
   "opts_header_false": {
+     "message": "OFF"
+  },
+  "opts_header_title2": {
+     "message": "Items"
+  },
+  "opts_header_true2": {
+     "message": "ON"
+  },
+  "opts_header_false2": {
      "message": "OFF"
   }
 }
