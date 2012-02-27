@@ -50,14 +50,21 @@ function execInjection(tabid, host, params) {
     console.log("params.external_link_only: " + params.external_link_only);
     console.log("params.contextmenu_enabled: " + params.contextmenu_enabled);
   }
+  var s = {code:""};
   if(host == undefined || params == undefined) {
-    var s = {code:""};
-    s.code = 'var al = document.getElementsByTagName("a");for(var i=0; i < al.length; i++){    al[i].setAttribute("target","_blank");}';
-    chrome.tabs.executeScript(tabid, s);
+    s.code = 'var al = document.getElementsByTagName("a");for(var i=0; i < al.length; i++){ al[i].setAttribute("target","_blank");}';
   } else {
-    var s = {code:""};
     s.code += 'var al = document.getElementsByTagName("a");'
     s.code += 'for(var i=0; i < al.length; i++){';
+    // 2012/02/27 - It is possible that a href_str might be the ssh: protocl by Jack.
+    //              So that, checking the protocol pattern.
+    //              If necessary, allow/deny protocol pattern list will be created.
+    //              But currently, it will be decided by the static text, "http."
+    s.code += '  var proto = al[i].protocol;';
+    s.code += '  if(proto.search("^http") == -1) {';
+    s.code += '    continue;';
+    s.code += '  }';
+    s.code += '';
     s.code += '  var a = document.createElement("a");';
     s.code += '  a.href = "' + host + '";';
     s.code += '  if(' + params.external_link_only + ') {';
@@ -71,8 +78,8 @@ function execInjection(tabid, host, params) {
     s.code += '  }';
     s.code += '}';
     if(debug) { console.log("execInjection: s.code = " + s.code); }
-    chrome.tabs.executeScript(tabid, s);
   }
+  chrome.tabs.executeScript(tabid, s);
 }
 function execRemoveTarget(tabid) {
   chrome.tabs.executeScript(tabid, {file: "scripts/remove_targets.js"});
