@@ -17,7 +17,7 @@ function localdata_showtable() {
 
     var tr = document.createElement("tr");
     // add background attribute each even line
-    if(i % 2 == 1) {
+    if(i % 2 == 0) {
       tr.setAttribute("style", "background:#e5ecf9");
     }
     var td1 = document.createElement("td");
