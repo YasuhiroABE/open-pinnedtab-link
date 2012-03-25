@@ -1,239 +1,80 @@
 <?xml version="1.0" encoding="UTF-8" ?><!-- -*- coding: utf-8 ; mode: xml -*- -->
 <html>
-<head>
-<style type="text/css">
-/* blueprint css */
-table {border-collapse:separate;border-spacing:0;}
-caption, th, td {text-align:left;font-weight:normal;}
-table, td, th {vertical-align:middle;}
+  <head>
+    <link rel="stylesheet" href="css/screen.css" type="text/css" media="screen,projection" />
+    <link rel="stylesheet" href="css/options.css" type="text/css" media="screen,projection" />
+    <script type="text/javascript" src="scripts/options.js"></script>
+  </head>
+  <body onload="restore_options(); set_text(); localdata_showtable()">
+    <div class="container">
+      <div id="content_title" class="prepend-top span-24 last">
+	<h1 id="top_title" class="span-24 last"></h1>
+	<hr />
+      </div>
+      <div class="settings span-24">
+	<div class="contextmenu_setting span-24 last">
+	  <h2 id="opts_title"></h2>
+	  <table class="even">
+	    <tr>
+	      <th id="opts_header_title"></th>
+	      <th id="opts_header_true"></th>
+	      <th id="opts_header_false"></th>
+	    </tr>
+	    <tr>
+	      <td id="opts_contextmenu_enabled"></td>
+	      <td><input type="radio" name="contextmenu_enabled" value="true" /></td>
+	      <td><input type="radio" name="contextmenu_enabled" value="false" /></td>
+	    </tr>
+	  </table>
+	</div>
 
-/* originals */
-body
-{
-  width:480px;
-  overflow-x:auto;
+	<div class="option_settings spna-24 last">
+	  <p id="opts_note"></p>
+	  <table class="even">
+	    <tr>
+	      <th id="opts_header_title2"></th>
+	      <th id="opts_header_true2"></th>
+	      <th id="opts_header_false2"></th>
+	    </tr>
+	    <tr>
+	      <td id="opts_title_enabled"></td>
+	      <td><input type="radio" name="enabled" value="true"/></td>
+	      <td><input type="radio" name="enabled" value="false" /></td>
+	    </tr>
 
-  font-family:"Helvetica Neue", Arial, Helvetica, sans-serif;
-  font-wight: normal;
-  font-size:  80%;
+	    <tr>
+	      <td id="opts_title_exclude"></td>
+	      <td><input type="radio" name="exclude_same_hostname" value="true" /></td>
+	      <td><input type="radio" name="exclude_same_hostname" value="false" /></td>
+	    </tr>
+	  </table>
+	</div>
 
-  background-color: #ffffff;
-  color: #000000;
-  margin: 10px 15px;
-  padding: 10px;
-}
+	<div class="buttons prepend-18 span-6 last">
+	  <button onclick="restore_options()" id="opts_button_reset"></button>
+	  <button onclick="save_options()" id="opts_button_save"></button>
+	</div>
+      </div>
 
-.medium { font-size:.9em; }
-.small { font-size:.8em; }
-.smallx { font-size:.7em; }
+      <div class="ls_contents prepend-top span-24 last">	
+	<hr />
+	<h2 id="localdata_table_title"></h2>
+	<p id="localdata_note"></p>
+	<table id="localdata_table" class="even">
+	  <tr>
+	    <th id="localdata_table_label_keys"></th>
+	    <th id="localdata_table_label_values"></th>
+	  </tr>
+	</table>
+	<div class="buttons">
+	  <button onclick="localdata_removeall()" id="localdata_button_removeall"></buttons>
+	</div>
+      </div>
 
-div.contents 
-{
-  width: 480px;
-  margin: 0px;
-  /* white-space: nowrap;*/
-}
-div.buttons
-{
-  text-align: right;
-}
-h1
-{
-  font-size: 1.6em;
-}
-h2
-{
-  font-size: 1.2em;
-  background-color: #0fafaf;
-  margin-top: 1em;
-  margin-bottom: 0;
-}
-table
-{
-  padding: 0;
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
-  width: 100%;
-}
-table th
-{
-  text-align: center;
-  background: #9fdada;
-}
-table td, table th
-{
-  border: 1px solid #696969;
-}
-table th#opts_header_true , table th#opts_header_false {
-  width: 10%;
-}
-
-p#opts_note , p#localdata_opts
-{
-  margin-top: 0.5em;
-  margin-bottom: 0em;
-}
-
-
-</style>
-<script type="text/javascript">
-  function localdata_removeall() {
-    localStorage.clear();
-    location.reload(true);
-  }
-
-  function localdata_showtable() {
-    var e = document.getElementById("localdata_table");
-    for(var i=0; i < localStorage.length; i++) {
-      var k = localStorage.key(i);
-      var v = localStorage.getItem(k);
-
-      var tr = document.createElement("tr");
-      var td1 = document.createElement("td");
-      var text1 = document.createTextNode(k);
-      td1.appendChild(text1);
-
-      var td2 = document.createElement("td");
-      var text2 = document.createTextNode(v);
-      td2.appendChild(text2);
-
-      tr.appendChild(td1);
-      tr.appendChild(td2);
-      e.appendChild(tr);
-    }
-  }
-
-  function restore_options() {
-    var opts_1 = localStorage.getItem("opts_enabled_default");
-    if(opts_1 == undefined || opts_1 == "undefined") {
-      localStorage["opts_enabled_default"] = true;
-    }
-    var opts_2 = localStorage.getItem("opts_external_link_only_default");
-    if(opts_2 == undefined || opts_2 == "undefined") {
-      localStorage["opts_external_link_only_default"] = false;
-    }
-    var opts_3 = localStorage.getItem("opts_contextmenu_enabled_default");
-    if(opts_3 == undefined || opts_3 == "undefined") {
-      localStorage["opts_contextmenu_enabled_default"] = true;
-    }
-    
-    var input_enabled = document.getElementsByName("enabled");
-    for(var i in input_enabled) {
-      var c = input_enabled[i];
-      if(c.value == (""+localStorage["opts_enabled_default"])) {
-        c.checked = true;
-      }
-    }
-  
-    var input_exclude_same_hostname = document.getElementsByName("exclude_same_hostname");
-    for(var i in input_exclude_same_hostname) {
-      var c = input_exclude_same_hostname[i];
-      if(c.value == (""+localStorage["opts_external_link_only_default"])) {
-        c.checked = true;
-      }
-    }
-
-    var input_contextmenu_enabled = document.getElementsByName("contextmenu_enabled");
-    for(var i in input_contextmenu_enabled) {
-      var c = input_contextmenu_enabled[i];
-      if(c.value == (""+localStorage["opts_contextmenu_enabled_default"])) {
-        c.checked = true;
-      }
-    }
-  }
-  
-  function save_options() {
-  
-    var input_enabled = document.getElementsByName("enabled");
-    for(var i in input_enabled) {
-      var c = input_enabled[i];
-      if(c.checked == true) {
-        localStorage["opts_enabled_default"] = JSON.parse(c.value);
-      }
-    }
-
-    var input_exclude_same_hostname = document.getElementsByName("exclude_same_hostname");
-    for(var i in input_exclude_same_hostname) {
-      var c = input_exclude_same_hostname[i];
-      if(c.checked == true) {
-        localStorage["opts_external_link_only_default"] = JSON.parse(c.value);
-      }
-    }  
-
-    var input_contextmenu_enabled = document.getElementsByName("contextmenu_enabled");
-    for(var i in input_contextmenu_enabled) {
-      var c = input_contextmenu_enabled[i];
-      if(c.checked == true) {
-        localStorage["opts_contextmenu_enabled_default"] = JSON.parse(c.value);
-      }
-    }    
-  }
-
-  function set_text() {
-    var list = new Array("top_title", "opts_title","opts_title_enabled","opts_title_exclude","opts_button_reset","opts_button_save","localdata_table_title", "localdata_button_removeall", "localdata_table_label_keys", "localdata_table_label_values", "opts_header_title", "opts_header_true", "opts_header_false", "opts_note","localdata_note","opts_contextmenu_enabled", "opts_header_title2", "opts_header_true2", "opts_header_false2");
-    for(var i=0; i < list.length; i++) {
-      var e = document.getElementById(list[i]);
-      var t = document.createTextNode(chrome.i18n.getMessage(list[i]));
-      e.appendChild(t);
-    }
-  }
-
-</script>
-</head>
-<body onload="restore_options(); set_text(); localdata_showtable()">
-  <h1 id="top_title"></h1>
-  <div class="contents">
-
-    <h2 id="opts_title"></h2>
-    <table class="medium">
-      <tr>
-	<th id="opts_header_title"></th>
-	<th id="opts_header_true"></th>
-	<th id="opts_header_false"></th>
-      </tr>
-      <tr>
-	<td id="opts_contextmenu_enabled"></td>
-	<td><input type="radio" name="contextmenu_enabled" value="true" /></td>
-	<td><input type="radio" name="contextmenu_enabled" value="false" /></td>
-      </tr>
-    </table>
-
-    <p id="opts_note"></p>
-    <table class="medium">
-      <tr>
-	<th id="opts_header_title2"></th>
-	<th id="opts_header_true2"></th>
-	<th id="opts_header_false2"></th>
-      </tr>
-      <tr>
-	<td id="opts_title_enabled"></td>
-	<td><input type="radio" name="enabled" value="true"/></td>
-	<td><input type="radio" name="enabled" value="false" /></td>
-      </tr>
-
-      <tr>
-	<td id="opts_title_exclude"></td>
-	<td><input type="radio" name="exclude_same_hostname" value="true" /></td>
-	<td><input type="radio" name="exclude_same_hostname" value="false" /></td>
-      </tr>
-    </table>
-    
-    <div class="buttons">
-      <button onclick="restore_options()" id="opts_button_reset"></button>
-      <button onclick="save_options()" id="opts_button_save"></button>
+      <div class="prepend-top span-24 last">
+	<hr />
+	<p class="copyright">Copyright (C) 2011-2012 <a href="http://www.yasundial.org/foaf.rdf" target="_blank">Yasuhiro ABE</a> &lt;yasu@yasundial.org&gt;</p>
+      </div>
     </div>
-  
-    <h2 id="localdata_table_title"></h2>
-    <p id="localdata_note"></p>
-    <table id="localdata_table" class="medium">
-      <tr>
-	<th id="localdata_table_label_keys"></th>
-	<th id="localdata_table_label_values"></th>
-      </tr>
-    </table>
-    <div class="buttons">
-      <button onclick="localdata_removeall()" id="localdata_button_removeall"></buttons>
-    </div>
-  </div>
-</body>
+  </body>
 </html>
