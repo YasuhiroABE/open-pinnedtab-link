@@ -3,7 +3,7 @@ openpinnedtab:
   path: openpinnedtab
   custom_layout:
     column_count: 24
-    column_width: 12
+    column_width: 13
     gutter_width: 10
   plugins:
     - fancy-type
