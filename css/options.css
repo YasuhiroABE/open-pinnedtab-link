@@ -1,0 +1,30 @@
+/** -*- coding: utf-8; mode: css -*-
+   *
+   * Copyright (C) 2011-2012 Yasuhiro ABE <yasu@yasundial.org>
+   *
+   */
+
+table
+{ 
+  border: 1px solid #000000;
+}
+
+table th 
+{ 
+  border-bottom: 2px solid #000000;
+  }
+
+.buttons
+{ 
+  text-align:right;
+  }
+
+bodys
+{ 
+  background: #fefaed;
+  }
+
+p.copyright
+{ 
+  text-align: right;
+  }
