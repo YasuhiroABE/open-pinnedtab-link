@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="css/options.css" type="text/css" media="screen,projection" />
     <script type="text/javascript" src="scripts/options.js"></script>
   </head>
-  <body onload="restore_options(); set_text(); localdata_showtable()">
+  <body>
     <div class="container">
       <div id="content_title" class="prepend-top span-24 last">
 	<h1 id="top_title" class="span-24 last"></h1>
@@ -51,8 +51,8 @@
 	</div>
 
 	<div class="buttons prepend-18 span-6 last">
-	  <button onclick="restore_options()" id="opts_button_reset"></button>
-	  <button onclick="save_options()" id="opts_button_save"></button>
+	  <button id="opts_button_reset"></button>
+	  <button id="opts_button_save"></button>
 	</div>
       </div>
 
@@ -67,7 +67,7 @@
 	  </tr>
 	</table>
 	<div class="buttons">
-	  <button onclick="localdata_removeall()" id="localdata_button_removeall"></buttons>
+	  <button id="localdata_button_removeall"></buttons>
 	</div>
       </div>
 

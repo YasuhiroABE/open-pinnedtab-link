@@ -109,3 +109,20 @@ function set_text() {
   }
 }
 
+// Add event listeners once the DOM has fully loaded by listening for the
+// `DOMContentLoaded` event on the document, and adding your listeners to
+// specific elements when it triggers.
+document.addEventListener(
+    'DOMContentLoaded',
+    function () {
+	// replacement of body.onload evnet
+        restore_options();
+        set_text();
+	localdata_showtable();
+
+	// add action on each button 
+	document.querySelector('#opts_button_reset').addEventListener('click', restore_options);
+	document.querySelector('#opts_button_save').addEventListener('click', save_options);
+	document.querySelector('#localdata_button_removeall').addEventListener('click', localdata_removeall);
+    }
+);
