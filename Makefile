@@ -1,6 +1,8 @@
 
+DATE = $(shell date +%y%m%d.%H%M)
+OUTPUT = archives/open-pinnedtab-link.$(DATE).zip
 
-../open-pinnedtab-link.zip: background.html manifest.json
-	touch ../open-pinnedtab-link.zip
-	test -f ../open-pinnedtab-link.zip && rm ../open-pinnedtab-link.zip 
-	zip ../open-pinnedtab-link.zip background.html  css/*.css icons/*  manifest.json  scripts/*.js options.html _locales/*/messages.json
+$(OUTPUT): manifest.json options.html
+	touch $(OUTPUT)
+	test -f $(OUTPUT) && rm $(OUTPUT)
+	zip $(OUTPUT) css/*.css icons/*  manifest.json  scripts/*.js options.html _locales/*/messages.json
